@@ -1,0 +1,63 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.23;
+
+/// @title PlanetSubmission
+/// @notice Użytkownicy mogą dodawać swoje ulubione planety i przeglądać listę zatwierdzonych.
+/// @dev Prosty przykład kontraktu w Solidity z mapowaniem i interfejsem.
+
+interface IPlanetSubmission {
+    // Zwraca listę zatwierdzonych planet
+    function getApprovedPlanets() external view returns (string[] memory);
+
+    // Dodaje planetę do ulubionych użytkownika
+    function addPlanet(string memory _planetName) external;
+
+    // Zwraca ulubione planety danego adresu
+    function getUserFavorites(address _address) external view returns (string[] memory);
+
+    // Czyści ulubione planety użytkownika
+    function resetUserFavorites() external;
+}
+
+contract PlanetSubmission is IPlanetSubmission {
+    // Mapowanie adresu użytkownika do jego listy ulubionych planet
+    mapping(address => string[]) public userFavorites;
+
+    /// @notice Zwraca listę zatwierdzonych planet Układu Słonecznego
+    function getApprovedPlanets()
+        external
+        pure
+        override
+        returns (string[] memory)
+    {
+        string ;
+        approved[0] = "Merkury";
+        approved[1] = "Wenus";
+        approved[2] = "Ziemia";
+        approved[3] = "Mars";
+        approved[4] = "Jowisz";
+        approved[5] = "Saturn";
+        approved[6] = "Uran";
+        approved[7] = "Neptun";
+        return approved;
+    }
+
+    /// @notice Dodaje nową planetę do ulubionych użytkownika
+    /// @param _planetName nazwa planety do dodania
+    function addPlanet(string memory _planetName) external override {
+        userFavorites[msg.sender].push(_planetName);
+    }
+
+    /// @notice Zwraca ulubione planety konkretnego użytkownika
+    /// @param _address adres użytkownika, którego lista ma zostać zwrócona
+    function getUserFavorites(
+        address _address
+    ) external view override returns (string[] memory) {
+        return userFavorites[_address];
+    }
+
+    /// @notice Usuwa wszystkie ulubione planety użytkownika
+    function resetUserFavorites() external override {
+        delete userFavorites[msg.sender];
+    }
+}
